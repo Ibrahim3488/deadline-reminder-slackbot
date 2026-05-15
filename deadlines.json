@@ -1,0 +1,17 @@
+ [
+    {
+        "course": "Python Basics",
+        "assigment":"Unit Testing Lab",
+        "deu_date": "2026-05-15"
+    },
+    {
+        "course": "Cybersecurity",
+        "assigment":"Final presentation",
+        "deu_date": "2026-05-20"
+    },
+    {
+        "course": "Complexity Problem solving",
+        "assigment":"Mid Term Exam",
+        "deu_date": "2026-7-24"
+    }
+]
