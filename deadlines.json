@@ -1,17 +1,23 @@
  [
     {
         "course": "Python Basics",
-        "assigment":"Unit Testing Lab",
-        "deu_date": "2026-05-15"
+        "assignment":"Unit Testing Lab",
+        "due_date": "2026-05-17",
+	"priority": "high",
+        "status": "open"
     },
     {
         "course": "Cybersecurity",
-        "assigment":"Final presentation",
-        "deu_date": "2026-05-20"
+        "assignment":"Final presentation",
+        "due_date": "2026-05-20",
+	"priority": "Medium",
+        "status": "open"
     },
     {
         "course": "Complexity Problem solving",
-        "assigment":"Mid Term Exam",
-        "deu_date": "2026-7-24"
+        "assignment":"Mid Term Exam",
+        "due_date": "2026-5-18",
+        "priority": "low",
+        "status": "open"
     }
 ]

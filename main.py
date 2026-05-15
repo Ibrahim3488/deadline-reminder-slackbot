@@ -1,84 +1,76 @@
 import json
-from argparse import REMAINDER
-from datetime import date, datetime
-from email import message
-from token import TYPE_COMMENT
-from urllib import response
-
+import os
+import time
+from datetime import datetime
 
 import requests
+import schedule
 from dotenv import load_dotenv
-from pathlib import Path
-import os
 
-from pathlib import Path
-from dotenv import dotenv_values
-
-from pathlib import Path
-from dotenv import dotenv_values
-
-from pathlib import Path
-from dotenv import dotenv_values
-
-from datetime import datetime
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
-
 webhook_url = os.getenv("SLACK_WEBHOOK_URL")
 
-with open("deadlines.json", "r") as file:
-    deadlines = json.load(file)
-"""def get_deadline_from_file():
-    with open("deadline.json", "r") as file:
-        return json.load(file)
-    
-def get_deadlines_from_lms():
-    #todo:Later replace this with real open edX API call
-    #Example:
-    #response = requests.get(lms_api_url, headers=headers)
-    #:return response.json()
+
+def get_deadlines_from_openedx():
+    # TODO: replace JSON data with real Open edX API response later
     pass
-#for now use fake json data
-deadlines = get_deadline_from_file()"""
-#later change only this line
-#deadline = get_deadlines_from_lms()
-deadline = [
-    {
-        "course": "Python Basics",
-        "assigment":"Unit Testing Lab",
-        "deu_date": "2026-05-15"
-    },
-    {
-        "course": "Cybersecurity",
-        "assigment":"Final presentation",
-        "deu_date": "2026-05-20"
-    },
-    {
-        "course": "Complexity Problem solving",
-        "assigment":"Mid Term Exam",
-        "deu_date": "2026-7-24"
-    }
-]
-today = datetime.today()
 
-for item in deadline:
-    due_date = datetime.strptime(item['deu_date'], "%Y-%m-%d")
-    days_left = (due_date - today).days
-    if days_left <= 3:
 
-      message = {
-         "text": f"""
-         Upcoming Deadline
-         course : {item["course"]}
-         assigment : {item["assigment"]}
-         deu_date : {item["deu_date"]}
-        """
-     }
+def check_deadlines():
+    with open("deadlines.json", "r") as file:
+        deadlines = json.load(file)
 
-#message = {"text": "Hello from my Deadline Reminder Bot"}
+    with open("sent_reminders.json", "r") as file:
+        sent_reminders = json.load(file)
 
-response = requests.post(webhook_url, json=message)
-print(response.status_code)
-print(response.text)
+    today = datetime.today()
+    upcoming_deadlines = []
+
+    for item in deadlines:
+        due_date = datetime.strptime(item["due_date"], "%Y-%m-%d")
+        days_left = (due_date - today).days
+
+        reminder_id = f"{item['course']}_{item['assignment']}_{item['due_date']}"
+
+        if 0 <= days_left <= 3 and reminder_id not in sent_reminders:
+            upcoming_deadlines.append(
+                f"• {item['course']} - {item['assignment']} is due in {days_left} day(s)"
+            )
+            sent_reminders.append(reminder_id)
+
+    if upcoming_deadlines:
+        message_text = "⚠️ Upcoming Deadline Reminder\n\n" + "\n".join(upcoming_deadlines)
+
+        message = {
+            "text": message_text
+        }
+
+        try:
+            response = requests.post(webhook_url, json=message)
+            print(response.status_code, response.text)
+
+            with open("bot.log", "a") as log:
+                log.write(f"{datetime.now()} - Slack message sent successfully\n")
+
+        except Exception as error:
+            print("Slack sending failed:", error)
+
+            with open("bot.log", "a") as log:
+                log.write(f"{datetime.now()} - Slack sending failed: {error}\n")
+
+        with open("sent_reminders.json", "w") as file:
+            json.dump(sent_reminders, file, indent=4)
+    else:
+        print("No upcoming deadlines.")
+    with open("bot.log", "a") as log:
+        log.write(f"{datetime.now()} - Reminder check completed\n")
+
+
+check_deadlines()
+
+schedule.every().day.at("09:00").do(check_deadlines)
+
+while True:
+    schedule.run_pending()
+    time.sleep(60)
