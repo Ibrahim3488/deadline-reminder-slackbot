@@ -85,3 +85,20 @@ Due in: 2 day(s)
 
 ## Author
 
+Features
+Architecture
+Project Structure
+Future Improvements
+Open edX Integration Status
+
+main.py → reminder workflow
+auth.py → Open edX authentication
+openedx_api.py → Open edX API requests
+deadlines.json → local mock data
+sent_reminders.json → duplicate prevention
+bot.log → execution logs
+
+Open edX sandbox authentication endpoint was reachable,
+but sandbox did not return JWT token data.
+Project currently uses local JSON mock data until
+real API credentials/access are available.
