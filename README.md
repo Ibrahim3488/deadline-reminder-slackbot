@@ -102,3 +102,7 @@ Open edX sandbox authentication endpoint was reachable,
 but sandbox did not return JWT token data.
 Project currently uses local JSON mock data until
 real API credentials/access are available.
+
+## Slack Message Formatting
+
+The bot uses Slack Block Kit to display reminders in a structured format with headers, dividers, and formatted sections.
