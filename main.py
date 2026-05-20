@@ -80,10 +80,30 @@ def check_deadlines():
 
     if upcoming_deadlines:
         message_text = "⚠️ Upcoming Deadline Reminder\n\n" + "\n".join(upcoming_deadlines)
-
         message = {
-            "text": message_text
+            "blocks": [
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "⚠️ Upcoming Deadline Reminder"
+                    }
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": message_text
+                    }
+                }
+            ]
         }
+        """message = {
+            "text": message_text
+        }"""
 
         try:
             response = requests.post(webhook_url, json=message)
