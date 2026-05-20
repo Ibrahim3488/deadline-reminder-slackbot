@@ -106,3 +106,11 @@ real API credentials/access are available.
 ## Slack Message Formatting
 
 The bot uses Slack Block Kit to display reminders in a structured format with headers, dividers, and formatted sections.
+## Installation
+
+```bash
+git clone <repository-url>
+cd deadline-reminder-slackbot
+
+pip install -r requirements.txt
+```
