@@ -118,8 +118,14 @@ def check_deadlines():
     else:
         print("No upcoming deadlines.")
 
+    #with open("bot.log", "a") as log:
+       # log.write(f"{datetime.now()} - Reminder check completed\n")
     with open("bot.log", "a") as log:
-        log.write(f"{datetime.now()} - Reminder check completed\n")
+        log.write(
+            f"{datetime.now()} | "
+            f"Source: {'Open edX' if USE_OPENEDX else 'JSON'} | "
+            f"Upcoming reminders: {len(upcoming_deadlines)}\n"
+        )
 
 check_deadlines()
 
