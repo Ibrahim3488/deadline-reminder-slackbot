@@ -19,6 +19,18 @@ def get_deadlines_from_openedx():
     # TODO: replace JSON data with real Open edX API response later
     pass
 
+def format_deadline_message(item, days_left, emoji, priority):
+
+    return (
+        f"{emoji} PRIORITY: {priority.upper()}\n"
+        f"📘 Course: {item['course']}\n"
+        f"📝 Assignment: {item['assignment']}\n"
+        f"📅 Due in: {days_left} day(s)\n"
+    )
+
+
+
+    # your logic here
 
 def check_deadlines():
 
@@ -70,12 +82,14 @@ def check_deadlines():
         reminder_id = f"{item['course']}_{item['assignment']}_{item['due_date']}"
         #if 0 <= days_left <= 3 and reminder_id not in sent_reminders:
         if 0 <= days_left <= REMINDER_DAYS and reminder_id not in sent_reminders:
-            upcoming_deadlines.append(
-                f"{emoji} PRIORITY: {priority.upper()}\n"
-                f"📘 Course: {item['course']}\n"
-                f"📝 Assignment: {item['assignment']}\n"
-                f"📅 Due in: {days_left} day(s)\n"
+            message = format_deadline_message(
+                item,
+                days_left,
+                emoji,
+                priority
             )
+
+            upcoming_deadlines.append(message)
             sent_reminders.append(reminder_id)
 
     if upcoming_deadlines:

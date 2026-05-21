@@ -114,3 +114,7 @@ cd deadline-reminder-slackbot
 
 pip install -r requirements.txt
 ```
+
+## Code Structure Improvement
+
+The project uses reusable helper functions such as `format_deadline_message()` to keep the code clean, readable, and maintainable.
