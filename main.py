@@ -31,6 +31,12 @@ def format_deadline_message(item, days_left, emoji, priority):
 
 
     # your logic here
+def get_priority_emoji(priority):
+
+    if priority == "high":
+        return "🔴"
+
+    return "🟡"
 
 def check_deadlines():
 
@@ -72,10 +78,7 @@ def check_deadlines():
         due_date = datetime.strptime(item["due_date"], "%Y-%m-%d")
         days_left = (due_date - today).days
         priority = item.get("priority", "normal")
-        if priority == "high":
-            emoji = "🔴"
-        else:
-            emoji = "🟡"
+        emoji = get_priority_emoji(priority)
         print("Priority:", priority)
         print("Emoji:", emoji)
 
