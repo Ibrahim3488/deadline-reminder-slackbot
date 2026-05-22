@@ -6,6 +6,8 @@ from datetime import datetime
 import requests
 import schedule
 from dotenv import load_dotenv
+from scheduler import start_scheduler
+from logger import write_log
 from slack_client import send_slack_message
 from data_loader import load_json_file
 from utils import get_priority_emoji, format_deadline_message
@@ -99,20 +101,10 @@ def check_deadlines():
     else:
         print("No upcoming deadlines.")
 
-    #with open("bot.log", "a") as log:
-       # log.write(f"{datetime.now()} - Reminder check completed\n")
-    with open("bot.log", "a") as log:
-        log.write(
-            f"{datetime.now()} | "
-            f"Source: {'Open edX' if USE_OPENEDX else 'JSON'} | "
-            f"Upcoming reminders: {len(upcoming_deadlines)}\n"
-        )
+    write_log(
+        f"Source: {'Open edX' if USE_OPENEDX else 'JSON'} | "
+        f"Upcoming reminders: {len(upcoming_deadlines)}"
+    )
 
 check_deadlines()
-
-#schedule.every().day.at("09:00").do(check_deadlines)
-#schedule.every(1).minutes.do(check_deadlines)
-schedule.every().day.at(CHECK_TIME).do(check_deadlines)
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+start_scheduler(CHECK_TIME, check_deadlines)
