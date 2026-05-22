@@ -142,3 +142,17 @@ main.py  ← main workflow controller
 scheduler.py  ← runs check_deadlines() automatically
   ↓
 Slack reminders
+
+## Project Structure
+
+```text
+main.py           Main application workflow and CLI modes
+config.py         Loads environment variables and settings
+scheduler.py      Runs the bot automatically at the configured time
+data_loader.py    Loads JSON files safely
+utils.py          Helper functions for formatting and priority emojis
+slack_client.py   Sends messages to Slack
+logger.py         Writes execution logs
+auth.py           Prepares Open edX authentication
+openedx_api.py    Prepares Open edX API deadline fetching
+test_deadlines.py Tests deadline filtering logic
