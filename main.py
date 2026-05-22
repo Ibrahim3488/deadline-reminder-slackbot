@@ -6,6 +6,7 @@ from datetime import datetime
 import requests
 import schedule
 from dotenv import load_dotenv
+from slack_client import send_slack_message
 from data_loader import load_json_file
 from utils import get_priority_emoji, format_deadline_message
 from config import (
@@ -32,7 +33,7 @@ def check_deadlines():
 
     else:
         deadlines = load_json_file("deadlines.json")
-        
+
     sent_reminders = load_json_file("sent_reminders.json")
 
     today = datetime.today()
@@ -87,8 +88,7 @@ def check_deadlines():
         }"""
 
         try:
-            response = requests.post(webhook_url, json=message)
-            print(response.status_code, response.text)
+            send_slack_message(webhook_url, message)
 
             with open("sent_reminders.json", "w") as file:
                 json.dump(sent_reminders, file, indent=4)
