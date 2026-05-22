@@ -7,36 +7,20 @@ import requests
 import schedule
 from dotenv import load_dotenv
 
-
-load_dotenv()
-webhook_url = os.getenv("SLACK_WEBHOOK_URL")
-
-USE_OPENEDX = os.getenv("USE_OPENEDX", "False") == "True"
-REMINDER_DAYS = int(os.getenv("REMINDER_DAYS", 3))
-CHECK_TIME = os.getenv("CHECK_TIME", "09:00")
+from utils import get_priority_emoji, format_deadline_message
+from config import (
+    webhook_url,
+    USE_OPENEDX,
+    REMINDER_DAYS,
+    CHECK_TIME
+)
 
 def get_deadlines_from_openedx():
     # TODO: replace JSON data with real Open edX API response later
     pass
 
-def format_deadline_message(item, days_left, emoji, priority):
-
-    return (
-        f"{emoji} PRIORITY: {priority.upper()}\n"
-        f"📘 Course: {item['course']}\n"
-        f"📝 Assignment: {item['assignment']}\n"
-        f"📅 Due in: {days_left} day(s)\n"
-    )
-
-
 
     # your logic here
-def get_priority_emoji(priority):
-
-    if priority == "high":
-        return "🔴"
-
-    return "🟡"
 
 def check_deadlines():
 
