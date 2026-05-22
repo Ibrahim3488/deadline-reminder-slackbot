@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 import schedule
 from dotenv import load_dotenv
-
+from data_loader import load_json_file
 from utils import get_priority_emoji, format_deadline_message
 from config import (
     webhook_url,
@@ -31,29 +31,9 @@ def check_deadlines():
         deadlines = get_deadlines_from_openedx()
 
     else:
-        try:
-            with open("deadlines.json", "r") as file:
-                deadlines = json.load(file)
-
-        except FileNotFoundError:
-            print("deadlines.json file not found")
-            deadlines = []
-
-        except json.JSONDecodeError:
-            print("Invalid JSON format in deadlines.json")
-            deadlines = []
-
-    try:
-        with open("sent_reminders.json", "r") as file:
-            sent_reminders = json.load(file)
-
-    except FileNotFoundError:
-        print("sent_reminders.json file not found")
-        sent_reminders = []
-
-    except json.JSONDecodeError:
-        print("Invalid JSON format in sent_reminders.json")
-        sent_reminders = []
+        deadlines = load_json_file("deadlines.json")
+        
+    sent_reminders = load_json_file("sent_reminders.json")
 
     today = datetime.today()
     upcoming_deadlines = []
