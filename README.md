@@ -118,3 +118,27 @@ pip install -r requirements.txt
 ## Code Structure Improvement
 
 The project uses reusable helper functions such as `format_deadline_message()` to keep the code clean, readable, and maintainable.
+
+## Updated Architecture: scheduler.py Added
+
+`scheduler.py` was added to separate the automatic scheduling logic from `main.py`.
+
+### Purpose of scheduler.py
+
+`scheduler.py` is responsible for:
+- starting the daily reminder schedule,
+- running the reminder function at the configured time,
+- keeping the bot active continuously.
+
+### Updated File Responsibilities
+
+```text
+.env
+  ↓
+config.py
+  ↓
+main.py  ← main workflow controller
+  ↓
+scheduler.py  ← runs check_deadlines() automatically
+  ↓
+Slack reminders
