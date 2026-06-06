@@ -18,6 +18,8 @@ def get_access_token():
             "grant_type": "client_credentials",
             "client_id": OPENEDX_CLIENT_ID,
             "client_secret": OPENEDX_CLIENT_SECRET,
+            #"": OPENEDX_USERNAME,  # Added username
+            #"": OPENEDX_PASSWORD,
             "token_type": "JWT"
         }
     )
