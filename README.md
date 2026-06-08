@@ -1,158 +1,121 @@
 # Deadline Reminder SlackBot
 
-A Python-based Slack bot that sends automated deadline reminders to a Slack channel.
+Python-based Slack reminder bot for Team Foxtrot's German UDS Coding Camp I capstone project.
+
+## Official Task Context
+
+The selected capstone task was **Task 4: Deadline Reminder SlackBot**. The task asked for a Slack bot that checks the Open edX API for upcoming deadlines and sends notifications. The brief also noted that Open edX API access may involve OAuth complexity and that no local Open edX installation is required.
+
+## Current MVP
+
+The current stable MVP demonstrates the reminder workflow with JSON-based deadline data:
+
+1. load deadline data,
+2. calculate how close each deadline is,
+3. assign a priority,
+4. format a Slack reminder,
+5. send the reminder through Slack.
+
+Open edX integration has been explored and partially prepared, but the demonstrated stable workflow currently uses JSON data.
 
 ## Features
 
-- Reads deadline data from a JSON file
-- Sends reminders to Slack using Incoming Webhooks
-- Calculates upcoming deadlines
-- Uses environment variables for secure webhook management
-- GitHub-integrated project
-
-## Technologies Used
-
-- Python
-- Slack Incoming Webhooks
-- Requests library
-- JSON
-- Git & GitHub
-- python-dotenv
+- Python reminder workflow
+- JSON-based deadline data for the MVP
+- Slack Incoming Webhook notification
+- Combined reminder messages
+- Environment variable configuration through `.env`
+- Modular helpers for data loading, Slack sending, formatting, logging, and scheduling
+- Open edX authentication/API preparation for future integration
 
 ## Project Structure
 
 ```text
-DeadlineReminder/
-│
-├── main.py
-├── deadlines.json
-├── .env
-├── .gitignore
-└── README.md
+main.py           Main workflow and command modes
+config.py         Loads environment variables and settings
+data_loader.py    Safely loads JSON files
+slack_client.py   Sends Slack messages
+utils.py          Formats reminder messages and priorities
+scheduler.py      Runs reminder checks on a schedule
+logger.py         Writes execution logs
+auth.py           Open edX authentication preparation
+openedx_api.py    Open edX deadline retrieval preparation
+deadlines.json    Sample MVP deadline data
+test_deadlines.py Deadline logic tests
 ```
 
-## Installation
+## Setup
 
-Clone the repository:
+Create and activate a virtual environment, then install dependencies:
 
 ```bash
-git clone https://github.com/Ibrahim3488/deadline-reminder-slackbot.git
-```
-
-Go to project folder:
-
-```bash
-cd deadline-reminder-slackbot
-```
-
-Install dependencies:
-
-```bash
-pip install requests python-dotenv
-```
-
-## Configure Slack Webhook
-
-Create a `.env` file:
-
-```text
-SLACK_WEBHOOK_URL=your_slack_webhook_url
-```
-
-## Run the Bot
-
-```bash
-python main.py
-```
-
-## Example Slack Notification
-
-```text
-⚠️ Upcoming Deadline
-
-Course: Python Basics
-Assignment: Unit Testing Lab
-Due in: 2 day(s)
-```
-
-## Future Improvements
-
-- Connect to Open edX API
-- Automatic scheduled execution
-- Multiple Slack channels
-- User-specific reminders
-- Database integration
-
-## Author
-
-Features
-Architecture
-Project Structure
-Future Improvements
-Open edX Integration Status
-
-main.py → reminder workflow
-auth.py → Open edX authentication
-openedx_api.py → Open edX API requests
-deadlines.json → local mock data
-sent_reminders.json → duplicate prevention
-bot.log → execution logs
-
-Open edX sandbox authentication endpoint was reachable,
-but sandbox did not return JWT token data.
-Project currently uses local JSON mock data until
-real API credentials/access are available.
-
-## Slack Message Formatting
-
-The bot uses Slack Block Kit to display reminders in a structured format with headers, dividers, and formatted sections.
-## Installation
-
-```bash
-git clone <repository-url>
-cd deadline-reminder-slackbot
-
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Code Structure Improvement
-
-The project uses reusable helper functions such as `format_deadline_message()` to keep the code clean, readable, and maintainable.
-
-## Updated Architecture: scheduler.py Added
-
-`scheduler.py` was added to separate the automatic scheduling logic from `main.py`.
-
-### Purpose of scheduler.py
-
-`scheduler.py` is responsible for:
-- starting the daily reminder schedule,
-- running the reminder function at the configured time,
-- keeping the bot active continuously.
-
-### Updated File Responsibilities
+Create a `.env` file locally. Do not commit it.
 
 ```text
-.env
-  ↓
-config.py
-  ↓
-main.py  ← main workflow controller
-  ↓
-scheduler.py  ← runs check_deadlines() automatically
-  ↓
-Slack reminders
+SLACK_WEBHOOK_URL=your_slack_webhook_url
+REMINDER_DAYS=3
+CHECK_TIME=09:00
+USE_OPENEDX=False
 
-## Project Structure
+# Future Open edX integration
+OPENEDX_BASE_URL=https://open.uds-staging-test.abzt.de
+OPENEDX_CLIENT_ID=your_client_id
+OPENEDX_CLIENT_SECRET=your_client_secret
+```
 
-```text
-main.py           Main application workflow and CLI modes
-config.py         Loads environment variables and settings
-scheduler.py      Runs the bot automatically at the configured time
-data_loader.py    Loads JSON files safely
-utils.py          Helper functions for formatting and priority emojis
-slack_client.py   Sends messages to Slack
-logger.py         Writes execution logs
-auth.py           Prepares Open edX authentication
-openedx_api.py    Prepares Open edX API deadline fetching
-test_deadlines.py Tests deadline filtering logic
+## Run
+
+Test one reminder check:
+
+```bash
+python main.py test
+```
+
+Run with the scheduler:
+
+```bash
+python main.py run
+```
+
+## Security Notes
+
+- Do not hardcode Slack webhooks or OAuth secrets in Python files.
+- Store secrets in `.env`.
+- Keep `.env` out of Git with `.gitignore`.
+- Do not submit or share `.env` files in zip uploads.
+
+## Open edX Integration Status
+
+The target final product should retrieve live deadlines from Open edX. The project currently includes preparatory Open edX authentication/API files, but the stable demonstrated MVP uses JSON.
+
+Recommended next steps for Open edX integration:
+
+1. confirm OAuth client credentials on staging,
+2. request a bearer token from the Open edX OAuth endpoint,
+3. call course APIs for the Team Foxtrot test course,
+4. extract due-date information,
+5. replace JSON deadline data with live API results.
+
+## Known Limitations
+
+- The current MVP uses JSON instead of live Open edX deadline data.
+- Open edX OAuth/API integration still needs final validation.
+- Tests should remain date-independent.
+- Production deployment, stronger logging, and monitoring are future improvements.
+
+## Roadmap
+
+1. Stabilize MVP date parsing and tests.
+2. Complete Open edX token and course API validation.
+3. Retrieve live deadline data from Open edX.
+4. Deploy the scheduler on a server or cloud environment.
+5. Add user-specific reminders and stronger logging.
+
+## AI and Source Disclosure
+
+AI support may be used for debugging explanations, documentation structure, and presentation wording under the AI Assessment Scale. Any copied or adapted code from external tutorials, prior teams, Stack Overflow, or AI tools should be disclosed in the lab report and presentation materials.
