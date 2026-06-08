@@ -9,7 +9,8 @@ from utils import get_priority_emoji, format_deadline_message
 from config import (
     webhook_url,
     REMINDER_DAYS,
-    CHECK_TIME
+    CHECK_TIME,
+    USE_OPENEDX
 )
 from pathlib import Path
 from dotenv import dotenv_values
@@ -61,8 +62,17 @@ if token_data:
     print(response.text)
 else:
     print("Token request failed")
+def parse_due_date(value):
+    """Parse deadline dates from either ISO Open edX style or simple JSON date format."""
+    from datetime import datetime, timezone
+
+    if value.endswith("Z"):
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+
+    return datetime.strptime(value, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+
+
 def check_deadlines():
-    USE_OPENEDX = True
     print("CHECK_DEADLINES STARTED")
     print("USE_OPENEDX =", USE_OPENEDX)
     if USE_OPENEDX:
@@ -77,7 +87,7 @@ def check_deadlines():
     from datetime import datetime, timezone
     today = datetime.now(timezone.utc)
     for item in deadlines:
-        due_date = datetime.strptime(item["due_date"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        due_date = parse_due_date(item["due_date"])
         days_left = (due_date - today).days
         if 1 <= days_left <= 3:
             priority = "high"
